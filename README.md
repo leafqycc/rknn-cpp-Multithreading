@@ -6,6 +6,7 @@
 
 # 更新说明
 * 修复了cmake找不到pthread的问题
+* 新建nosigmoid分支,使用[rknn_model_zoo](https://github.com/airockchip/rknn_model_zoo/tree/main/models)下的模型以达到极限性能提升
 
 # 使用说明
 ### 演示
