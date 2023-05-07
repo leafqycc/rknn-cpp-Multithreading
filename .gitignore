@@ -29,3 +29,7 @@
 *.exe
 *.out
 *.app
+
+*.mp4
+/build
+/install
