@@ -167,9 +167,6 @@ static int quick_sort_indice_inverse(std::vector<float>& input, int left, int ri
   return low;
 }
 
-static float sigmoid(float x) { return 1.0 / (1.0 + expf(-x)); }
-
-static float unsigmoid(float y) { return -1.0 * logf((1.0 / y) - 1.0); }
 
 inline static int32_t __clip(float val, float min, float max)
 {
@@ -192,7 +189,7 @@ static int process(int8_t* input, int* anchor, int grid_h, int grid_w, int heigh
 {
   int    validCount = 0;
   int    grid_len   = grid_h * grid_w;
-  float  thres      = unsigmoid(threshold);
+  float  thres      = threshold;
   int8_t thres_i8   = qnt_f32_to_affine(thres, zp, scale);
   for (int a = 0; a < 3; a++) {
     for (int i = 0; i < grid_h; i++) {
@@ -201,10 +198,10 @@ static int process(int8_t* input, int* anchor, int grid_h, int grid_w, int heigh
         if (box_confidence >= thres_i8) {
           int     offset = (PROP_BOX_SIZE * a) * grid_len + i * grid_w + j;
           int8_t* in_ptr = input + offset;
-          float   box_x  = sigmoid(deqnt_affine_to_f32(*in_ptr, zp, scale)) * 2.0 - 0.5;
-          float   box_y  = sigmoid(deqnt_affine_to_f32(in_ptr[grid_len], zp, scale)) * 2.0 - 0.5;
-          float   box_w  = sigmoid(deqnt_affine_to_f32(in_ptr[2 * grid_len], zp, scale)) * 2.0;
-          float   box_h  = sigmoid(deqnt_affine_to_f32(in_ptr[3 * grid_len], zp, scale)) * 2.0;
+          float   box_x  = deqnt_affine_to_f32(*in_ptr, zp, scale) * 2.0 - 0.5;
+          float   box_y  = deqnt_affine_to_f32(in_ptr[grid_len], zp, scale) * 2.0 - 0.5;
+          float   box_w  = deqnt_affine_to_f32(in_ptr[2 * grid_len], zp, scale) * 2.0;
+          float   box_h  = deqnt_affine_to_f32(in_ptr[3 * grid_len], zp, scale) * 2.0;
           box_x          = (box_x + j) * (float)stride;
           box_y          = (box_y + i) * (float)stride;
           box_w          = box_w * box_w * (float)anchor[a * 2];
@@ -222,7 +219,7 @@ static int process(int8_t* input, int* anchor, int grid_h, int grid_w, int heigh
             }
           }
           if (maxClassProbs>thres_i8){
-            objProbs.push_back(sigmoid(deqnt_affine_to_f32(maxClassProbs, zp, scale))* sigmoid(deqnt_affine_to_f32(box_confidence, zp, scale)));
+            objProbs.push_back(deqnt_affine_to_f32(maxClassProbs, zp, scale)* deqnt_affine_to_f32(box_confidence, zp, scale));
             classId.push_back(maxClassId);
             validCount++;
             boxes.push_back(box_x);
