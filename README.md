@@ -1,12 +1,12 @@
 # 简介
 * 此仓库为c++实现, 大体改自[rknpu2](https://github.com/rockchip-linux/rknpu2), python快速部署见于[rknn-multi-threaded](https://github.com/leafqycc/rknn-multi-threaded)
 * 使用[线程池](https://github.com/senlinzhan/dpool)异步操作rknn模型, 提高rk3588/rk3588s的NPU使用率, 进而提高推理帧数
-* [yolov5s](https://github.com/rockchip-linux/rknpu2/tree/master/examples/rknn_yolov5_demo/model/RK3588)使用relu激活函数进行优化,提高量化能力
-* **rk3568等**请自行修改include/rknnPool.hpp下的rknn_lite类和rknnPool的构造函数
+* [yolov5s](https://github.com/rockchip-linux/rknpu2/tree/master/examples/rknn_yolov5_demo/model/RK3588)使用relu激活函数进行优化,提高推理帧率
 
 # 更新说明
 * 修复了cmake找不到pthread的问题
 * 新建nosigmoid分支,使用[rknn_model_zoo](https://github.com/airockchip/rknn_model_zoo/tree/main/models)下的模型以达到极限性能提升
+* 将RK3588 NPU SDK 更新至官方主线1.5.0, [yolov5s-silu](https://github.com/rockchip-linux/rknn-toolkit2/tree/v1.4.0/examples/onnx/yolov5)将沿用1.4.0的旧版本模型, [yolov5s-relu](https://github.com/rockchip-linux/rknpu2/tree/master/examples/rknn_yolov5_demo/model/RK3588)更新至1.5.0版本, 弃用nosigmoid分支。
 
 # 使用说明
 ### 演示
@@ -22,14 +22,14 @@
 # 多线程模型帧率测试
 * 使用performance.sh进行CPU/NPU定频尽量减少误差
 * 测试模型来源: 
-* [yolov5s-silu](https://github.com/rockchip-linux/rknn-toolkit2/tree/master/examples/onnx/yolov5) 
+* [yolov5s-silu](https://github.com/rockchip-linux/rknn-toolkit2/tree/v1.4.0/examples/onnx/yolov5) 
 * [yolov5s-relu](https://github.com/rockchip-linux/rknpu2/tree/master/examples/rknn_yolov5_demo/model/RK3588)
 * 测试视频可见于 [bilibili](https://www.bilibili.com/video/BV1zo4y1x7aE/?spm_id_from=333.999.0.0)
 
-|  模型\线程数   | 1    |  2   | 3  |  4  | 5  | 6  | 12  |
-|  ----  | ----  |  ----  | ----  |  ----  | ----  | ----  | ----  |
-| Yolov5s - silu  | 15.9269  | 32.9192 | 52.8330  | 46.6782 | 58.2921 | 71.8070 |  |
-| Yolov5s - relu  | 26.8601 | 58.0305 | 77.6904 | 80.7144 | 93.9126 | 101.1400 | 122.7334 |
+|  模型\线程数   | 1    |  2   | 3  |  4  | 5  | 6  | 9  | 12  |
+|  ----  | ----  |  ----  | ----  |  ----  | ----  | ----  | ----  | ----  |
+| Yolov5s - silu  | 22.2211  | 46.6982 | 70.9794  | 64.7563 | 81.0925 | 96.2544 | 105.4083 | 108.8529 |
+| Yolov5s - relu  | 23.8122 | 54.6376 | 84.5434 | 82.5834 | 100.8524 | 112.6708 | 129.7348 | 142.2799 |
 
 # 补充
 * 异常处理尚未完善, 目前仅支持rk3588/rk3588s下的运行
