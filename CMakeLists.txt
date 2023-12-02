@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4.1)
 
 project(rknn_yolov5_demo)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "-pthread")
 
@@ -20,18 +20,21 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
 set(LIB_ARCH aarch64)
 set(RKNN_RT_LIB ${CMAKE_SOURCE_DIR}/include/librknnrt.so)
+
+#rga
+set(RGA_PATH ${CMAKE_SOURCE_DIR}/include/3rdparty/rga/RK3588)
+set(RGA_LIB ${RGA_PATH}/lib/Linux//${LIB_ARCH}/librga.so)
+
+
 include_directories(${RKNN_API_PATH}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/3rdparty)
+include_directories(${RGA_PATH}/include)
 
 # opencv
 find_package(OpenCV REQUIRED)
 
-#rga
-set(RGA_PATH ${CMAKE_SOURCE_DIR}/include/3rdparty/rga/RK3588)
-set(LIB_ARCH aarch64)
-set(RGA_LIB ${RGA_PATH}/lib/Linux/${LIB_ARCH}/librga.so)
-include_directories( ${RGA_PATH}/include)
 set(CMAKE_INSTALL_RPATH "lib")
+
 
 # rknn_yolov5_demo
 include_directories( ${CMAKE_SOURCE_DIR}/include)
@@ -39,12 +42,14 @@ include_directories( ${CMAKE_SOURCE_DIR}/include)
 add_executable(rknn_yolov5_demo
         src/main.cc
         src/postprocess.cc
+        src/preprocess.cc
+        src/rkYolov5s.cc
 )
 
 target_link_libraries(rknn_yolov5_demo
   ${RKNN_RT_LIB}
-  ${RGA_LIB}
   ${OpenCV_LIBS}
+  ${RGA_LIB}
 )
 
 

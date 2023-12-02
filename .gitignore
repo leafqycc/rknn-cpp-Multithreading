@@ -33,3 +33,8 @@
 *.mp4
 /build
 /install
+/.vscode
+
+*.png
+*.jpg
+*.mp4
