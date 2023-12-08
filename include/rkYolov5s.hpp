@@ -14,7 +14,7 @@ class rkYolov5s
 {
 private:
     int ret;
-    
+    std::mutex mtx;
     std::string model_path;
     unsigned char *model_data;
 

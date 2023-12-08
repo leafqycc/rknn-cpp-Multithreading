@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <mutex>
 #include "rknn_api.h"
 
 #include "postprocess.h"
@@ -210,6 +210,7 @@ rknn_context *rkYolov5s::get_pctx()
 
 cv::Mat rkYolov5s::infer(cv::Mat &orig_img)
 {
+    std::lock_guard<std::mutex> lock(mtx);
     cv::Mat img;
     cv::cvtColor(orig_img, img, cv::COLOR_BGR2RGB);
     img_width = img.cols;
