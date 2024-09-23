@@ -31,10 +31,13 @@ int main(int argc, char **argv)
 
     cv::namedWindow("Camera FPS");
     cv::VideoCapture capture;
-    if (strlen(vedio_name) == 1)
-        capture.open((int)(vedio_name[0] - '0'));
-    else
-        capture.open(vedio_name);
+    if (strlen(vedio_name) == 1 || strlen(vedio_name) == 2) {
+                int deviceIndex = atoi(vedio_name);
+                    capture.open(deviceIndex);
+    } else {
+                capture.open(vedio_name);
+    }
+
 
     struct timeval time;
     gettimeofday(&time, nullptr);
